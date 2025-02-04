@@ -17,6 +17,8 @@ def carregar_arquivos(arquivos):
     base_final = pd.concat(lista, ignore_index=True)
     return base_final
 
+
+
 # Função para gerar os arquivos
 def gerar_arquivos_filtrados(base, tipo_planilha):
     colunas_iguais = base['MG_Emprestimo_Disponivel'].equals(base['MG_Emprestimo_Total'])
@@ -115,6 +117,7 @@ tipo_planilha = st.sidebar.radio("Selecione o tipo de planilha que deseja retorn
 if arquivos:
     # Carregar os dados
     base = carregar_arquivos(arquivos)
+    st.write(base.head()) 
     st.write("---")
     st.write("### Pré-visualização dos dados carregados")
     st.dataframe(base.head())
