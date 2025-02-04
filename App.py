@@ -9,7 +9,10 @@ st.set_page_config(page_title="Processador de Arquivos", layout="wide")
 def carregar_arquivos(arquivos):
     lista = []
     for arquivo in arquivos:
-        base = pd.read_csv(arquivo, sep=',', low_memory=False)
+        try:
+            base = pd.read_csv(arquivo, sep=',', low_memory=False)
+        except:
+            base = pd.read_csv(arquivo, sep=';', low_memory=False)
         lista.append(base)
     base_final = pd.concat(lista, ignore_index=True)
     return base_final
