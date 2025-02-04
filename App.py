@@ -8,14 +8,27 @@ st.set_page_config(page_title="Processador de Arquivos", layout="wide")
 @st.cache_data
 def carregar_arquivos(arquivos):
     lista = []
+    
     for arquivo in arquivos:
         try:
-            base = pd.read_csv(arquivo, sep=',', low_memory=False)
-        except:
-            base = pd.read_csv(arquivo, sep=';', low_memory=False)
+            base = pd.read_csv(arquivo, sep=',', low_memory=False, encoding='utf-8')
+        except pd.errors.ParserError:
+            try:
+                base = pd.read_csv(arquivo, sep=';', low_memory=False, encoding='utf-8')
+            except Exception as e:
+                print(f"Erro ao carregar {arquivo}: {e}")
+                return None
+        
+        print(f"Arquivo carregado: {arquivo}, Linhas: {len(base)}, Colunas: {len(base.columns)}")
         lista.append(base)
-    base_final = pd.concat(lista, ignore_index=True)
-    return base_final
+    
+    if lista:
+        base_final = pd.concat(lista, ignore_index=True, join='outer')  # Pode ser 'inner' para manter colunas comuns
+        print(f"DataFrame final criado com {len(base_final)} linhas e {len(base_final.columns)} colunas.")
+        return base_final
+    else:
+        print("Nenhum arquivo foi carregado com sucesso.")
+        return None
 
 
 
